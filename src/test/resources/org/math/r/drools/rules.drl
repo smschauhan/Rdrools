@@ -1,0 +1,12 @@
+import java.util.HashMap;
+global java.util.HashMap output;
+
+rule "rule1"
+	salience 0
+	when
+		input : HashMap()
+	then
+		output.put("address", "" + input.get("email"));
+		output.put("subject", "Your grade in " + input.get("class"));
+		output.put("body", "You got a " + input.get("grade") + " in " + input.get("class") + ", " + input.get("name"));
+end
