@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.math.r</groupId>
 	<artifactId>drools</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<name>Rdrools</name>
 	<description>An R package to execute drools rules</description>
 	<build>
@@ -110,7 +110,7 @@
 								<echo>Installing the Rdrools package....</echo>
 								<exec dir="${basedir}/build" executable="cmd">
 									<arg value="/c" />
-									<arg value="Rcmd INSTALL Rdrools_0.0.1.tar.gz" />
+									<arg value="Rcmd INSTALL Rdrools_0.0.2.tar.gz" />
 								</exec>
 							</tasks>
 						</configuration>

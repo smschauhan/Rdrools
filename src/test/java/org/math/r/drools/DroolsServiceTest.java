@@ -34,11 +34,6 @@ public class DroolsServiceTest extends TestCase {
   public DroolsServiceTest() {
   }
 
-  @Override
-  protected void setUp() throws Exception {
-    service = new DroolsService();
-  }
-
   @Test
   public void testDataSetRules() {
     runRules("input.csv", "rules.drl", "name, class, grade, email", "address, subject, body",
@@ -51,8 +46,8 @@ public class DroolsServiceTest extends TestCase {
     try {
       String input = readFileAsString(this.getClass().getResourceAsStream(csvFile));
       String rules = readFileAsString(this.getClass().getResourceAsStream(rulesFile));
-
-      String outputCSV = service.execute(input, rules, expectedInputColumnsCSV, outputColumnsCSV);
+      service = new DroolsService(rules, expectedInputColumnsCSV, outputColumnsCSV);
+      String outputCSV = service.execute(input);
       System.out.println(outputCSV);
       CSVParser parser = new CSVParser(new ByteArrayInputStream(outputCSV.getBytes()));
       String[] columns = parser.getLine();

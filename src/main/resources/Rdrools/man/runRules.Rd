@@ -9,33 +9,22 @@ The rules engine picks up a row from the dataframe, applies the transformation t
 }
 
 \usage{
-runRules(rules.connection, input.df, rules, input.columns, output.columns)
+runRules(rules.session, input.df)
 }
 \arguments{
-  \item{rules.connection}{
-  a connection the the rules engine created using the the \code{\link{rulesConnection}}
+  \item{rules.session}{
+  a session of the rules engine created using the the \code{\link{rulesSession}}
 }
   \item{input.df}{
      a dataframe consisting of a set of rows you wish to transform, and columns you wish to use in the transformation
 }
-  \item{rules}{
-     a character vector consisting of lines read from a rules file of format drl(drools rules file)\cr
-     This character vector is eventually collapsed into a character vector of length 1, so the way you read the file could potentially be just about anything
-}
-  \item{input.columns}{
-     a character vector of a set of input column, for example\cr
-     \code{input.columns<-c("name", "class", "grade", "email")} 
-}
-  \item{output.columns}{
-	a character vector of a set of expected output columns, for example\cr
-	\code{output.columns<-c("address", "subject", "body")}
-}
+ 
 }
 \details{
 If you are not familiar with the drools file format, please have a look at the references provided in the \code{\link{Rdrools}} man page. More details on how conflicting rules are resolved using either salience or the Reete algorithm are also present in the references.
 }
 \value{
-  \item{output.df }{a dataframe which is the result of transformations applied to the input dataframe(\code{input.df}), the columns being the list provided through the \code{output.columns} parameter.}
+  \item{output.df }{a dataframe which is the result of transformations applied to the input dataframe(\code{input.df}), the columns being the list provided through the \code{output.columns} parameter in \code{\link{rulesSession}}.}
 }
 
 \author{
@@ -49,7 +38,7 @@ Please make sure that the list of output columns provided through the \code{outp
 }
 
 \seealso{
- \code{\link{Rdrools}}, \code{\link{rulesConnection}} 
+ \code{\link{Rdrools}}, \code{\link{rulesSession}} 
 }
 \examples{
 library(Rdrools)
@@ -57,27 +46,24 @@ data(class)
 data(rules)
 input.columns<-c("name", "class", "grade", "email")
 output.columns<-c("address", "subject", "body")
-rules.connection<-rulesConnection()
-output.df<-runRules(rules.connection, class, rules, input.columns, output.columns)
+rules.session<-rulesSession(rules, input.columns, output.columns)
+output.df<-runRules(rules.session, class)
 
 ## The function is currently defined as
-function(rules.connection,input.df,rules,input.columns, output.columns)
+function(rules.session,input.df)
 {
 	conn<-textConnection('input.csv.string','w')
 	write.csv(input.df,file=conn)
 	close(conn)
-	input.csv.string<-paste(input.csv.string, sep="\n", collapse="\n")
 	input.csv.string<-paste(input.csv.string, collapse="\n")
-	rules <- paste(rules, collapse="\n")
-	input.columns<-paste(input.columns,collapse=",")
-	output.columns<-paste(output.columns,collapse=",")
-	output.csv.string <- .jcall(rules.connection, "S", 
-		"execute",input.csv.string, rules, input.columns, output.columns)
+	output.csv.string <- .jcall(rules.session, "S", "execute",input.csv.string)
+	conn <- textConnection(output.csv.string, "r")
 	output.df<-read.csv(file=conn, header=T)
 	close(conn)
 	return(output.df)
 }
+
 }
 \keyword{ runRules }
-\keyword{ rulesConnection }
+\keyword{ rulesSession }
 \keyword{ Rdrools }

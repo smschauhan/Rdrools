@@ -26,48 +26,65 @@ import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.CSVPrinter;
 
 /**
- * @author Sms.Chauhan
- * 
+ * @author Sms Chauhan A lot in this class has been taken from the Drools node present in the
+ *         nexusBPM project. The class mostly relies on the contribution of
+ *         the project members.
  */
 public class DroolsService {
 
-  public String execute(String inputCSV, String rules, String expectedInputColumnsCSV,
-          String outputColumnsCSV) throws Exception {
-    String outputCSV = null;
-    List<String> expectedInputColumns = new ArrayList<String>();
-    List<String> outputColumns = new ArrayList<String>();
-    String[] inputColumns = null;
-    ByteArrayOutputStream csvOutputStream = new ByteArrayOutputStream();
+  private String[] inputColumns = null;
+
+  private List<String> expectedInputColumns = null;
+
+  private List<String> outputColumns = null;
+
+  private StatelessSession session = null;
+
+  public DroolsService(String rules, String expectedInputColumnsCSV, String outputColumnsCSV)
+          throws Exception {
+    this.expectedInputColumns = new ArrayList<String>();
+    this.outputColumns = new ArrayList<String>();
     // validate all inputs
-    validateInputs(inputCSV, rules, expectedInputColumnsCSV, expectedInputColumns,
-            outputColumnsCSV, outputColumns);
+    validateInputs(rules, expectedInputColumnsCSV, expectedInputColumns, outputColumnsCSV,
+            outputColumns);
+    this.session = createSession(rules);
+  }
+
+  public String execute(String inputCSV) throws Exception {
+    String outputCSV = null;
+    ByteArrayOutputStream csvOutputStream = new ByteArrayOutputStream();
+    // verify input CSV
+    validateInputCSV(inputCSV);
     // read the inputs columns from the input CSV string
     InputStream inputCSVStream = new ByteArrayInputStream(inputCSV.getBytes());
     CSVParser parser = new CSVParser(inputCSVStream);
-    inputColumns = parser.getLine();
+    this.inputColumns = parser.getLine();
     // verify input columns
-    verifyInputColumns(expectedInputColumns, inputColumns);
+    verifyInputColumns(this.expectedInputColumns, this.inputColumns);
     // open an output stream for the output CSV string and print the column names
     CSVPrinter printer = new CSVPrinter(csvOutputStream);
-    printer.writeln(outputColumns.toArray(new String[outputColumns.size()]));
+    printer.writeln(this.outputColumns.toArray(new String[this.outputColumns.size()]));
     // get a drools session from the rules file
-    StatelessSession session = createSession(rules);
+
     // run the rules and write the results to the output CSV
-    runRules(inputColumns, outputColumns, parser, printer, session);
-    //convert the ByteArrayOutputStream to a string
+    runRules(this.inputColumns, this.outputColumns, parser, printer, this.session);
+    // convert the ByteArrayOutputStream to a string
     outputCSV = new String(csvOutputStream.toByteArray(), "UTF-8");
     return outputCSV;
 
   }
 
-  protected void validateInputs(String inputCSV, String rules, String expectedInputColumnsCSV,
+  protected void validateInputCSV(String inputCSV) throws Exception {
+    if (inputCSV == null || inputCSV == "") {
+      throw new NullArgumentException("The input dataset is emtpy!");
+    }
+  }
+
+  protected void validateInputs(String rules, String expectedInputColumnsCSV,
           List<String> expectedInputColumns, String outputColumnsCSV, List<String> outputColumns)
           throws Exception
 
   {
-    if (inputCSV == null || inputCSV == "") {
-      throw new NullArgumentException("The input dataset is emtpy!");
-    }
     if (rules == null || rules == "") {
       throw new NullArgumentException("Empty rules file!");
     }
