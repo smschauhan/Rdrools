@@ -29,7 +29,7 @@
   <echo>Installing the Rdrools package....</echo>
   <exec dir="D:\Briefcase\Workspace\Rdrools/build" executable="cmd">
     <arg value="/c"/>
-    <arg value="Rcmd INSTALL Rdrools_0.0.2.tar.gz"/>
+    <arg value="Rcmd INSTALL Rdrools_0.0.3.tar.gz"/>
   </exec>
 </target>
 </project>

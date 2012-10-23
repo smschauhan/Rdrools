@@ -12,8 +12,8 @@ Rdrools is a robust rules engine based on the popular rules engine Drools writte
 \tabular{ll}{
 Package: \tab Rdrools\cr
 Type: \tab Package\cr
-Version: \tab 0.0.2\cr
-Date: \tab 2011-11-29\cr
+Version: \tab 0.0.3\cr
+Date: \tab 2012-10-23\cr
 License: \tab LGPL-3\cr
 LazyLoad: \tab yes\cr
 LazyData: \tab yes\cr
