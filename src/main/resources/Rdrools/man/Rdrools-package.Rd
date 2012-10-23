@@ -29,6 +29,32 @@ Maintainer: SMS Chauhan <smschauhan@gmail.com>
 Wikipedia:\url{http://en.wikipedia.org/wiki/Drools}\cr
 Drools Documentation:\url{http://docs.jboss.org/drools/release/5.3.0.Final/drools-expert-docs/html_single/index.html}
 }
+\note{
+For applying a conditional rule, you can use the eval statement in your rules syntax. Please see a detailed example below.
+\preformatted{
+import  java.util.HashMap;
+global  java.util.HashMap  output;
+rule"xx"
+dialect"mvel"
+        salience3
+        when
+                input:HashMap()
+                eval(input.get("currentAction")==input.get("previousAction"))
+        then
+                output.put("send","false")
+end
+rule"xy"
+dialect"mvel"
+        salience2
+        when
+                input:HashMap()
+                eval(input.get("currentAction")!=input.get("previousAction"))
+        then
+                output.put("send","true")
+end
+}
+}
+
 \keyword{ rulesSession }
 \keyword{ runRules }
 \keyword{ Rdrools }

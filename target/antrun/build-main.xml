@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <echo>copying the build to Rdrools..</echo>
+  <copy todir="D:\Briefcase\Workspace\Rdrools/build/Rdrools/inst/java">
+    <fileset dir="D:\Briefcase\Workspace\Rdrools/target">
+      <include name="*.jar"/>
+    </fileset>
+  </copy>
+  <delete>
+    <fileset dir="D:\Briefcase\Workspace\Rdrools/build/Rdroolsjars/inst/java/" includes="junit*"/>
+    <fileset dir="D:\Briefcase\Workspace\Rdrools/build/Rdroolsjars/inst/java/" includes="hamcrest*"/>
+  </delete>
+  <echo>Building the Rdroolsjars package...</echo>
+  <exec dir="D:\Briefcase\Workspace\Rdrools/build" executable="cmd">
+    <arg value="/c"/>
+    <arg value="Rcmd build Rdroolsjars"/>
+  </exec>
+  <echo>Building the Rdrools package...</echo>
+  <exec dir="D:\Briefcase\Workspace\Rdrools/build" executable="cmd">
+    <arg value="/c"/>
+    <arg value="Rcmd build Rdrools"/>
+  </exec>
+  <echo>Installing the Rdroolsjars package....</echo>
+  <exec dir="D:\Briefcase\Workspace\Rdrools/build" executable="cmd">
+    <arg value="/c"/>
+    <arg value="Rcmd INSTALL Rdroolsjars_0.0.1.tar.gz"/>
+  </exec>
+  <echo>Installing the Rdrools package....</echo>
+  <exec dir="D:\Briefcase\Workspace\Rdrools/build" executable="cmd">
+    <arg value="/c"/>
+    <arg value="Rcmd INSTALL Rdrools_0.0.2.tar.gz"/>
+  </exec>
+</target>
+</project>
